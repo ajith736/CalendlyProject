@@ -5,3 +5,12 @@ export async function getAll(){
     return users;
 
 }
+
+export async function getById(id:number){
+    const user = await prisma.user.findUnique({
+        where:{
+            id
+        }
+    });
+    return user;
+}
