@@ -13,4 +13,4 @@ export function sendSuccess<T>(res:Response,data:T,statusCode=200,message?:strin
     };
     if(message) body.message=message;
     res.status(statusCode).json(body);
-} 
+}  
