@@ -7,7 +7,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec tsx src/server.ts"
+    "dev": "nodemon --watch src --ext ts --exec tsx src/server.ts",
+    "prisma:format" : "npx prisma format",
+    "prisma:migrate" : "npx prisma migrate dev",
+    "prisma:generate" : "npx prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
