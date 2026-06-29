@@ -9,7 +9,7 @@
     locationValue:z.string().optional(),
     bufferBeforeMinutes:z.number().min(0).max(120).default(0),
     bufferAfterMinutes:z.number().min(0).max(120).default(0),
-    slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug may only contain lowercase letters, numbers, and hyphens'),
+    slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Slug may only contain lowercase letters, numbers, and hyphens').optional(),
   });
   export const UpdateEventTypeSchema = createEventTypeSchema.partial(); // this schema is like a subset of the original schema
   export type CreateEventTypeDto = z.infer<typeof createEventTypeSchema>;
