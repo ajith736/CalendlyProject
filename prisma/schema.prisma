@@ -30,6 +30,7 @@ model EventType {
   hostId              Int
   title               String
   description         String?
+  slug                String
   durationMinutes     Int
   isActive            Boolean  @default(true)
   locationType        String   @default("online")
@@ -41,6 +42,7 @@ model EventType {
 
   host User @relation(fields: [hostId], references: [id], onDelete: Cascade)
 
+  @@unique([hostId, slug])
   @@map("event_types")
 }
 
