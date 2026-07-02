@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import { findAllUsers, findById, createUser, updateUser, deleteUser } from '../controllers/user.controller.js';
-import { validate } from '../middlewares/validtae.js';
+import { validate } from '../middlewares/validate.js';
 import { createUserschema, updateUserSchema } from '../dtos/user.dto.js'
 
 

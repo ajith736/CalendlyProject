@@ -6,7 +6,7 @@ import {
     updateEventType,
     removeEventType,
 } from '../controllers/event-type.controller.js';
-import { validate } from '../middlewares/validtae.js';
+import { validate } from '../middlewares/validate.js';
 import { requireUserId } from '../middlewares/require-user-id.js';
 import { createEventTypeSchema, UpdateEventTypeSchema } from '../dtos/event-type.dto.js';
 
