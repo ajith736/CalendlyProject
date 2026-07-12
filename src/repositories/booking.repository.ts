@@ -65,16 +65,14 @@ export async function findHostBookings(hostId: number, filters: ListHostBookings
     });
 }
 
-export async function findBookingById(bookingId:number){
+
+export async function findBookingById(bookingId: number) {
     return prisma.booking.findUnique({
-        where:{
-            id:bookingId
-        },
-        include:{
-            slot:true,
-            eventType:true,
-            host:true,
+        where: { id: bookingId },
+        include: {
+            slot: true,
+            eventType: true,
+            host: true,
         },
     });
-
 }

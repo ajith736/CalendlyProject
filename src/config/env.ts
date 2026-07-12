@@ -9,11 +9,10 @@ export const TEMPORAL_ADDRESS = process.env.TEMPORAL_ADDRESS || 'localhost:7233'
 export const TEMPORAL_NAMESPACE = process.env.TEMPORAL_NAMESPACE || 'default';
 export const TEMPORAL_TASK_QUEUE = process.env.TEMPORAL_TASK_QUEUE || 'calendly-tasks';
 
-export const TEMPORAL_ENABLED = 'true'; // write a function which can
-// determine if temporal is enabled based on some health checks
+export const TEMPORAL_ENABLED = process.env.TEMPORAL_ENABLED !== 'false';
 
 export const SMTP_HOST = process.env.SMTP_HOST || 'localhost';
 export const SMTP_PORT = Number(process.env.SMTP_PORT) || 1025;
 export const SMTP_USER = process.env.SMTP_USER || '';
-export const SMTP_PASSWORD = process.env.SMTP_PASSWORD || '';
-export const EMAIL_FROM = process.env.EMAIL_FROM || 'Calendly <no-reply@calendly.com>';
+export const SMTP_PASS = process.env.SMTP_PASS || '';
+export const EMAIL_FROM = process.env.EMAIL_FROM || 'Calendly <noreply@example.com>';

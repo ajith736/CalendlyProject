@@ -28,5 +28,5 @@ services:
   mailhog:
     image: mailhog/mailhog:v1.0.1
     ports:
-      - "1025:1025" #SMTP server
-      - "8025:8025" #Web interface
+      - "1025:1025" # SMTP server
+      - "8025:8025" # web interface
