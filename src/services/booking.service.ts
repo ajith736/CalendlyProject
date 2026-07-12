@@ -1,6 +1,7 @@
+import { DateTime } from "luxon";
 import { prisma } from "../config/database.js";
-import { CreateBookingDto } from "../dtos/booking.dto.js";
-import { createBooking } from "../repositories/booking.repository.js";
+import { CreateBookingDto, ListHostBookingsQuery } from "../dtos/booking.dto.js";
+import { createBooking, findHostBookings } from "../repositories/booking.repository.js";
 import {
     findSlotById,
     lockSlotForUpdate,
@@ -9,6 +10,24 @@ import {
 } from "../repositories/slot.repository.js";
 import { badRequest, notFound } from "../utils/api-error.js";
 import type { Slot } from "../../generated/prisma/client.js";
+import { startRegenerateHostSlotsWorkflow } from "../temporal/client.js";
+
+
+/**
+ * 
+ * @param hostId 
+ * @param slotStartAt : Ex: 2026-07-12T00:00:00.000Z
+ */
+async function triggerSlotRegen(hostId: number, slotStartAt: Date) {
+    const date = slotStartAt.toISOString().split('T')[0];
+    await startRegenerateHostSlotsWorkflow({
+        hostId,
+        from: date,
+        to: date,
+    });
+
+    console.log(`[booking] Triggering slot regeneration for host ${hostId} on ${date}`);
+}
 
 function validateSlotForBooking(slot: Slot | null): Slot {
     if (!slot) {
@@ -64,6 +83,8 @@ export async function createBookingOptimistically(userId: number, dto: CreateBoo
         );
     });
 
+    await triggerSlotRegen(userId, booking.slot.startAt);
+
     return formatBookingResponse(booking);
 }
 
@@ -92,5 +113,48 @@ export async function createBookingPessimistically(userId: number, dto: CreateBo
         );
     });
 
+    await triggerSlotRegen(userId, booking.slot.startAt);
+
     return formatBookingResponse(booking);
+}
+
+function formatBookingListItem(booking: {
+    id: number;
+    status: string;
+    inviteeEmail: string;
+    inviteeName: string;
+    inviteeNotes: string | null;
+    slot: { startAt: Date; endAt: Date };
+    eventType: { id: number; title: string; slug: string };
+}) {
+    return {
+        id: booking.id,
+        status: booking.status,
+        inviteeEmail: booking.inviteeEmail,
+        inviteeName: booking.inviteeName,
+        inviteeNotes: booking.inviteeNotes,
+        startAt: booking.slot.startAt.toISOString(),
+        endAt: booking.slot.endAt.toISOString(),
+        eventType: booking.eventType,
+    };
+}
+
+export async function listHostBookings(hostId: number, query: ListHostBookingsQuery) {
+    const from = query.from
+        ? DateTime.fromISO(query.from, { zone: "utc" }).startOf("day").toJSDate()
+        : undefined;
+
+    const to = query.to
+        ? DateTime.fromISO(query.to, { zone: "utc" }).endOf("day").toJSDate()
+        : undefined;
+
+    const bookings = await findHostBookings(hostId, {
+        status: query.status,
+        from,
+        to,
+    });
+
+    return {
+        bookings: bookings.map(formatBookingListItem),
+    };
 }

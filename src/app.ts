@@ -1,5 +1,8 @@
-import express from 'express';
-import { userRouter } from './routers/user.router.js';
+// Configures the setting for the express app object
+
+import express, { Express } from 'express';
+import { availabilityRouter } from './routers/availability.router.js';
+import { bookingRouter } from './routers/booking.router.js';
 import { eventTypeRouter } from './routers/event-type.router.js';
 import { publicEventRouter } from './routers/public-event-type.router.js';
 import { errorHandler } from './middlewares/error-handler.js';
@@ -18,6 +21,7 @@ app.get('/health', (_req, res) => {
 
 app.use("/api/users", userRouter);
 app.use('/api/availability', availabilityRouter);
+app.use('/api/bookings', bookingRouter);
 app.use('/api/event-types', eventTypeRouter);
 app.use('/api/public', publicEventRouter);
 app.use(routeNotFound);
