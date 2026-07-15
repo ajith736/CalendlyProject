@@ -12,3 +12,31 @@ export async function findBookedSlotsByHostInRange(hostId: number, startDate: Da
         },
     })
 }
+
+export async function upsertAvailableSlot(input: {
+    hostId: number;
+    eventTypeId: number;
+    startAt: Date;
+    endAt: Date;
+}) {
+    const { hostId, eventTypeId, startAt, endAt } = input;
+    return prisma.slot.upsert({
+        where: {
+            eventTypeId_startAt_endAt: {
+                eventTypeId,
+                startAt,
+                endAt,
+            },
+        },
+        create: {
+            hostId,
+            eventTypeId,
+            startAt,
+            endAt,
+            status: "AVAILABLE",
+        },
+        update: {
+            status: "AVAILABLE",
+        },
+    });
+}

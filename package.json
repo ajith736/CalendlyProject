@@ -11,19 +11,21 @@
     "prisma:format": "npx prisma format",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",
-    "prisma:all":"npm run prisma:format && npm run prisma:migrate && npm run prisma:generate"
+    "prisma:all": "npm run prisma:format && npm run prisma:migrate && npm run prisma:generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "luxon": "^3.7.2",
     "pg": "^8.21.0",
     "slug": "^11.0.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/luxon": "^3.7.2",
     "@types/node": "^25.9.1",
     "@types/pg": "^8.20.0",
     "@types/slug": "^5.0.9",
