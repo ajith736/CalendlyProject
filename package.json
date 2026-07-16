@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --watch src --ext ts --exec tsx src/server.ts",
+    "dev:worker": "nodemon --watch src --ext ts --exec tsx src/temporal/worker.ts",
     "prisma:format": "npx prisma format",
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:generate": "npx prisma generate",

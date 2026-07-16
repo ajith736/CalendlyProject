@@ -3,6 +3,7 @@ import { CreateEventTypeDto, UpdateEventTypeDto } from "../dtos/event-type.dto.j
 import { create, findActiveByHostIdAndEventSlug, findByHostId, getById, remove, slugExistsForHost, update } from "../repositories/event-type.repository.js";
 import { conflict, forbidden, notFound } from "../utils/api-error.js";
 import { getById as getUserById } from "../repositories/user.repository.js";
+import { startRegenerateHostWorkflow } from "../temporal/client.js";
 
 
 export async function listEventTypes(hostId: number) {
@@ -22,7 +23,9 @@ export async function createEventType(hostId: number, data: CreateEventTypeDto) 
         throw conflict('A event type with this slug already exists, please use a different slug');
     }
 
-    return create(hostId, {...data, slug: slugPassed});
+    const eventType = create(hostId, {...data, slug: slugPassed});
+    await startRegenerateHostWorkflow({hostId});
+    return eventType;
 }
 
 export async function updateEventType(hostId: number, id: number, data: UpdateEventTypeDto) {

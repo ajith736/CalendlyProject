@@ -10,6 +10,6 @@ const {regenerateHostSlotsActivity} = proxyActivities<typeof activities>({
     startToCloseTimeout:'10 minutes',
 })
 
-export async function regenerateHostSlotWorkflow(input:RegenerateHostSlotsInput){
+export async function regenerateHostSlotsWorkflow(input:RegenerateHostSlotsInput){
     await regenerateHostSlotsActivity(input);
 }
