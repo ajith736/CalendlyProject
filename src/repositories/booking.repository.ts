@@ -76,3 +76,16 @@ export async function findBookingById(bookingId: number) {
         },
     });
 }
+
+export async function updateBookingCalendarDetails(
+    bookingId: number,
+    data: { meetLink: string; calendarEventId: string },
+    db?: DbClient
+) {
+    const client = getDbClient(db);
+
+    return client.booking.update({
+        where: { id: bookingId },
+        data,
+    });
+}

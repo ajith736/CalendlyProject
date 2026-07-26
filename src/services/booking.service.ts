@@ -10,7 +10,11 @@ import {
 } from "../repositories/slot.repository.js";
 import { badRequest, notFound } from "../utils/api-error.js";
 import type { Slot } from "../../generated/prisma/client.js";
-import { startRegenerateHostWorkflow, startSendBookingConfirmationEmailWorkflow } from "../temporal/client.js";
+import {
+    startCreateGoogleCalendarEventWorkflow,
+    startRegenerateHostWorkflow,
+    startSendBookingConfirmationEmailWorkflow,
+} from "../temporal/client.js";
 
 
 /**
@@ -67,6 +71,7 @@ async function postBookingActions(hostId: number, booking: {
 }) {
     await triggerSlotRegen(hostId, booking.slot.startAt);
     await startSendBookingConfirmationEmailWorkflow(booking.id);
+    await startCreateGoogleCalendarEventWorkflow(booking.id);
 
     return formatBookingResponse(booking)
 }
