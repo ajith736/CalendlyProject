@@ -16,6 +16,7 @@ import {
     updateException as updateExceptionRepo,
     updateRule as updateRuleRepo,
 } from "../repositories/availability.repository.js";
+import { startRegenerateHostWorkflow } from "../temporal/client.js";
 import { forbidden, notFound } from "../utils/api-error.js";
 
 export async function listRules(userId: number) {
@@ -23,7 +24,9 @@ export async function listRules(userId: number) {
 }
 
 export async function createRule(userId: number, data: CreateAvailabilityRuleDto) {
-    return createRuleRepo(userId, data);
+    const createdRule = await createRuleRepo(userId, data);
+    await startRegenerateHostWorkflow({hostId:userId}); 
+    return createdRule;
 }
 
 export async function updateRule(userId: number, ruleId: number, data: UpdateAvailabilityRuleDto) {
@@ -35,7 +38,10 @@ export async function updateRule(userId: number, ruleId: number, data: UpdateAva
         throw forbidden("You are not authorized to update this availability rule");
     }
 
-    return updateRuleRepo(ruleId, data);
+    const updatedRule = await updateRuleRepo(ruleId, data);
+    await startRegenerateHostWorkflow({hostId:userId}); 
+    return updatedRule;
+    
 }
 
 export async function removeRule(userId: number, ruleId: number) {
@@ -47,7 +53,9 @@ export async function removeRule(userId: number, ruleId: number) {
         throw forbidden("You are not authorized to delete this availability rule");
     }
 
-    return removeRuleRepo(ruleId);
+    const removedRule = await removeRuleRepo(ruleId);
+    await startRegenerateHostWorkflow({hostId:userId}); 
+    return removedRule;
 }
 
 export async function listExceptions(userId: number) {
@@ -55,7 +63,9 @@ export async function listExceptions(userId: number) {
 }
 
 export async function createException(userId: number, data: CreateAvailabilityExceptionDto) {
-    return createExceptionRepo(userId, data);
+    const createdException = await createExceptionRepo(userId, data);
+    await startRegenerateHostWorkflow({hostId:userId}); 
+    return createdException;
 }
 
 export async function updateException(userId: number, exceptionId: number, data: UpdateAvailabilityExceptionDto) {
@@ -67,7 +77,10 @@ export async function updateException(userId: number, exceptionId: number, data:
         throw forbidden("You are not authorized to update this availability exception");
     }
 
-    return updateExceptionRepo(exceptionId, data);
+    const updatedException = updateExceptionRepo(exceptionId, data);
+    await startRegenerateHostWorkflow({hostId:userId}); 
+    return updatedException;
+
 }
 
 export async function removeException(userId: number, exceptionId: number) {
@@ -79,5 +92,8 @@ export async function removeException(userId: number, exceptionId: number) {
         throw forbidden("You are not authorized to delete this availability exception");
     }
 
-    return removeExceptionRepo(exceptionId);
+    const removedException = await removeExceptionRepo(exceptionId);
+    await startRegenerateHostWorkflow({hostId:userId});
+    return removedException;
+
 }
