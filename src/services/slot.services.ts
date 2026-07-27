@@ -24,11 +24,12 @@ export async function regenerateHostSlots(input:RegenerateHostSlotsInput){
 
     const from = input.from
     ? DateTime.fromISO(input.from,{zone:'utc'}).startOf('day') // 2026-06-01 -> 2026-06-01T00:00:00:000Z
-    :DateTime.now().startOf('day');
+    :DateTime.now().startOf('day').toUTC();
 
     const to = input.to
     ? DateTime.fromISO(input.to,{zone:'utc'}).endOf('day')  // 2026-06-01 -> 2026-06-01T23:59:59:999Z
-    : from.plus({days:SLOT_GENRATION_DAYS}).endOf('day');
+    : from.plus({days:SLOT_GENRATION_DAYS}).endOf('day').toUTC();
+    
     const[rules,exceptions,eventTypes,bookedSlots]= await Promise.all([
         findActiveRulesByUser(input.hostId),
         findExceptionsByUserInRange(input.hostId,from.toJSDate(),to.toJSDate()),
@@ -69,7 +70,7 @@ export async function regenerateHostSlots(input:RegenerateHostSlotsInput){
             const slots = splitIntoSlots(
                 windows, // windows on which exceptions are applied
                 eventType.durationMinutes,
-                eventType.bufferBeforeMinutes,
+                eventType.bufferBeforeMinutes, 
                 eventType.bufferAfterMinutes,
             ).filter(
                 (slot) => slot.start > DateTime.utc() && !overlapsBooked(slot, bookedWindows, eventType.bufferBeforeMinutes, eventType.bufferAfterMinutes)

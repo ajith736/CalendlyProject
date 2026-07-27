@@ -24,7 +24,7 @@ export async function createEventType(hostId: number, data: CreateEventTypeDto) 
     }
 
     const eventType = create(hostId, {...data, slug: slugPassed});
-    await startRegenerateHostWorkflow({hostId});
+    await startRegenerateHostWorkflow({hostId});       // asyncronous temporal flow 
     return eventType;
 }
 
