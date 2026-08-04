@@ -10,7 +10,7 @@ import {
 } from "../repositories/slot.repository.js";
 import { badRequest, notFound } from "../utils/api-error.js";
 import type { Slot } from "../../generated/prisma/client.js";
-import { startRegenerateHostSlotsWorkflow } from "../temporal/client.js";
+import { startRegenerateHostWorkflow } from "../temporal/client.js";
 
 
 /**
@@ -20,7 +20,7 @@ import { startRegenerateHostSlotsWorkflow } from "../temporal/client.js";
  */
 async function triggerSlotRegen(hostId: number, slotStartAt: Date) {
     const date = slotStartAt.toISOString().split('T')[0];
-    await startRegenerateHostSlotsWorkflow({
+    await startRegenerateHostWorkflow({
         hostId,
         from: date,
         to: date,
