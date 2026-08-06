@@ -1,8 +1,8 @@
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI, GOOGLE_USER_EMAIL } from "../config/env.js";
 
-const { google } = require('googleapis');
+import { google } from 'googleapis';
 
-const SCOPES = [
+const SCOPES = [    
     'https://www.googleapis.com/auth/calendar',
     'https://www.googleapis.com/auth/calendar.events'
 ];
@@ -54,9 +54,5 @@ export async function exchangeSetupCode(code: string) {
         refresh_token: tokens.refresh_token,
         email: data.email ?? GOOGLE_USER_EMAIL
     }
-
-
-
-
 }
 
