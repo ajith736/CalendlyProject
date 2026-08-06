@@ -1,6 +1,6 @@
 import { proxyActivities } from "@temporalio/workflow";
 
-import type * as activities from "../activites/index.js";
+import type * as activities from "../activities/index.js";
 
 const { createGoogleCalendarEventActivity } = proxyActivities<typeof activities>({
     retry: { maximumAttempts: 3 },

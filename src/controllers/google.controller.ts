@@ -9,7 +9,7 @@ export const setupGoogleCallback = async (req: Request, res: Response) => {
 
     if(!code) throw badRequest('No code provided');
 
-    const { refreshToken, email } = await exchangeSetupCode(code);
+    const { refresh_token: refreshToken, email } = await exchangeSetupCode(code);
 
     res.status(200).json({
         success: true,

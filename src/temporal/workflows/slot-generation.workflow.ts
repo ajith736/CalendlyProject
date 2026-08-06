@@ -1,15 +1,13 @@
-import {proxyActivities} from "@temporalio/workflow"
+import { proxyActivities } from "@temporalio/workflow";
 
-import type * as activities from "../activities/index.js"
-import { RegenerateHostSlotsInput } from "../../services/slot.services.js";
+import type * as activities from "../activities/index.js";
+import type { RegenerateHostSlotsInput } from "../../services/slot.services.js";
 
-// create the proxy activities
+const { regenerateHostSlotsActivity } = proxyActivities<typeof activities>({
+    retry: { maximumAttempts: 3 },
+    startToCloseTimeout: "10 minutes",
+});
 
-const {regenerateHostSlotsActivity} = proxyActivities<typeof activities>({
-    retry:{maximumAttempts:3},
-    startToCloseTimeout:'10 minutes',
-})
-
-export async function regenerateHostSlotsWorkflow(input:RegenerateHostSlotsInput){
+export async function regenerateHostSlotsWorkflow(input: RegenerateHostSlotsInput) {
     await regenerateHostSlotsActivity(input);
 }

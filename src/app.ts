@@ -1,10 +1,11 @@
 // Configures the setting for the express app object
 
-import express from 'express';
+import express, { type Express } from 'express';
 import { availabilityRouter } from './routers/availability.router.js';
 import { bookingRouter } from './routers/booking.router.js';
 import { eventTypeRouter } from './routers/event-type.router.js';
 import { publicEventRouter } from './routers/public-event-type.router.js';
+import { userRouter } from './routers/user.router.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { routeNotFound } from './middlewares/route-not-found.js';
 import { googleIntegrationRouter } from './routers/google.router.js';

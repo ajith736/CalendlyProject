@@ -19,7 +19,7 @@ export function isProjectCalendarConfigured() : boolean {
 }
 
 export function getGoogleOauthClient() {
-    if (!isprojectCalendarConfigured()) {
+    if (!isProjectCalendarConfigured()) {
         throw new Error('Google Calendar is not configured');
     }
     return new google.auth.OAuth2(
@@ -59,7 +59,7 @@ export async function exchangeSetupCode(code: string) {
     // ideally here we should store it in redis
     return {
         refresh_token: tokens.refresh_token,
-        email: data.email ?? GOOGLE_USER_EMAIL
+        email: data.email ?? GOOGLE_SENDER_EMAIL
     }
 }
 

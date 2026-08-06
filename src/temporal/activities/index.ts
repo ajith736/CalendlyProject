@@ -4,8 +4,10 @@ import {
     createGoogleCalendarEvent,
     isProjectCalendarConfigured,
 } from "../../services/google-calender.service.js";
-import { RegenerateHostSlotsInput, regenerateHostSlots as runSlotGeneration } from "../../services/slot.service.js";
-
+import {
+    type RegenerateHostSlotsInput,
+    regenerateHostSlots,
+} from "../../services/slot.services.js";
 
 export async function regenerateHostSlotsActivity(input: RegenerateHostSlotsInput) {
     await regenerateHostSlots(input);
