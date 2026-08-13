@@ -8,8 +8,8 @@ import { applyExceptionsForDate, overlapsBooked, splitIntoSlots, TimeWindow, win
 
 export interface RegenerateHostSlotsInput{
     hostId: number;
-    from?: string;
-    to? : string;
+    from?: string;    // YYYY-MM-DD
+    to? : string;    // YYYY-MM-DD
 } 
 
 export async function regenerateHostSlots(input:RegenerateHostSlotsInput){
@@ -23,26 +23,29 @@ export async function regenerateHostSlots(input:RegenerateHostSlotsInput){
     if(!host)return;
 
     const from = input.from
-    ? DateTime.fromISO(input.from,{zone:'utc'}).startOf('day') // 2026-06-01 -> 2026-06-01T00:00:00:000Z
+    ? DateTime.fromISO(input.from,{zone:'utc'}).startOf('day') // 2026-06-01 -> 2026-06-01T00:00:00.000Z
     :DateTime.now().startOf('day').toUTC();
 
     const to = input.to
-    ? DateTime.fromISO(input.to,{zone:'utc'}).endOf('day')  // 2026-06-01 -> 2026-06-01T23:59:59:999Z
+    ? DateTime.fromISO(input.to,{zone:'utc'}).endOf('day')  // 2026-06-01 -> 2026-06-01T23:59:59.999Z
     : from.plus({days:SLOT_GENRATION_DAYS}).endOf('day').toUTC();
     
     const[rules,exceptions,eventTypes,bookedSlots]= await Promise.all([
         findActiveRulesByUser(input.hostId),
-        findExceptionsByUserInRange(input.hostId,from.toJSDate(),to.toJSDate()),
+        findExceptionsByUserInRange(input.hostId,from.toJSDate(),to.toJSDate()),   //(2026-06-01T00:00:00.000Z).toJSDate() -> 2026-06-01 00:00:00 UTC  here from the in db we store the date in JS date object so we need to convert the luxon date to js Date object to fetch
         findActiveEventTypesByHost(input.hostId),
         findBookedSlotsByHostInRange(input.hostId,from.toJSDate(),to.toJSDate())
     ]);
 
+    // convert booked slots into time windows  -> compatible with luxon
+
     const bookedWindows: TimeWindow[] = bookedSlots.map((slot)=>{
         return {
-            start:DateTime.fromJSDate(slot.startAt,{zone:'utc'}),
+            start:DateTime.fromJSDate(slot.startAt,{zone:'utc'}),  // here after fetching the slot from the db we need to convert the js Date object to luxon date object to use in the time window
             end:DateTime.fromJSDate(slot.endAt,{zone:'utc'}),
         }
     });
+    
     for(const eventType of eventTypes) {
 
         for(let cursor = from; cursor <= to; cursor = cursor.plus({ days: 1 })) {
