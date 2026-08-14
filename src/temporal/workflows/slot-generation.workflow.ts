@@ -1,7 +1,7 @@
 import { proxyActivities } from "@temporalio/workflow";
 
 import type * as activities from "../activities/index.js";
-import type { RegenerateHostSlotsInput } from "../../services/slot.services.js";
+import type { RegenerateHostSlotsInput } from "../../services/slot.service.js";
 
 const { regenerateHostSlotsActivity } = proxyActivities<typeof activities>({
     retry: { maximumAttempts: 3 },

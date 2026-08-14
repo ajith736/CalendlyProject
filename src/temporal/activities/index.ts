@@ -7,7 +7,7 @@ import {
 import {
     type RegenerateHostSlotsInput,
     regenerateHostSlots,
-} from "../../services/slot.services.js";
+} from "../../services/slot.service.js";
 
 export async function regenerateHostSlotsActivity(input: RegenerateHostSlotsInput) {
     await regenerateHostSlots(input);
