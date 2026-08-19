@@ -18,20 +18,20 @@ Hosts configure **when they are available** (weekly rules + date exceptions) and
 
 ```
 ┌─────────────┐     HTTP      ┌──────────────────────────────────────────┐
-│   Client    │ ────────────► │  Express (src/app.ts)                     │
-│  (k6 / API) │               │  Routers → Controllers → Services         │
-└─────────────┘               │              │                            │
-                              │              ▼                            │
-                              │         Repositories (Prisma)               │
-                              │              │                            │
-                              │              ▼                            │
-                              │         PostgreSQL                          │
-                              └──────────────┬───────────────────────────────┘
+│   Client    │ ────────────► │  Express (src/app.ts)                    │
+│  (k6 / API) │               │  Routers → Controllers → Services        │
+└─────────────┘               │              │                           │
+                              │              ▼                           │
+                              │         Repositories (Prisma)            |
+                              │              │                           │
+                              │              ▼                           │
+                              │         PostgreSQL                       │
+                              └──────────────┬───────────────────────────┘
                                              │ start workflow (async)
                                              ▼
                               ┌──────────────────────────────────────────┐
-                              │  Temporal Worker (src/temporal/worker.ts) │
-                              │  Activities: slot regen, email, GCal      │
+                              │  Temporal Worker (src/temporal/worker.ts)│
+                              │  Activities: slot regen, email, GCal     │
                               └──────────────────────────────────────────┘
 ```
 
